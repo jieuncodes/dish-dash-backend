@@ -12,17 +12,18 @@ enum UserRole {
   Owner,
   Delivery,
 }
+
 registerEnumType(UserRole, { name: 'UserRole' });
 
 @InputType({ isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
-  @Column((type) => String)
+  @Column()
   @Field((type) => String)
   email: string;
 
-  @Column((type) => String)
+  @Column()
   @Field((type) => String)
   password: string;
 
