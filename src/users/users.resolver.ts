@@ -3,7 +3,7 @@ import { User } from './entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
-  CreateAccountInputs,
+  CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
 
@@ -17,5 +17,5 @@ export class UsersResolver {
   }
 
   @Mutation((returns) => CreateAccountOutput)
-  createAccount(@Args('input') createAccountInput: CreateAccountInputs) {}
+  createAccount(@Args('input') createAccountInput: CreateAccountInput) {}
 }
