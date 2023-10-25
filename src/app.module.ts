@@ -22,7 +22,7 @@ import { JwtModule } from './jwt/jwt.module';
         USER_NAME: Joi.string().required(),
         USER_PASSWORD: Joi.string().required(),
         DATABASE: Joi.string().required(),
-        TOKEN_SECRET: Joi.string().required(),
+        PRIVATE_KEY: Joi.string().required(),
       }),
     }),
     GraphQLModule.forRoot({
@@ -46,7 +46,7 @@ import { JwtModule } from './jwt/jwt.module';
     }),
     UsersModule,
     CommonModule,
-    JwtModule.forRoot(),
+    JwtModule.forRoot({ privateKey: process.env.PRIVATE_KEY }),
   ],
   controllers: [],
   providers: [],
