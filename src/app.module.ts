@@ -1,14 +1,12 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import * as Joi from 'joi';
-import { RestaurantsModule } from './restaurants/restaurants.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { Restaurant } from './restaurants/entities/restaurant.entity';
-import { UsersModule } from './users/users.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import * as Joi from 'joi';
 import { CommonModule } from './common/common.module';
 import { User } from './users/entities/user.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -23,6 +21,7 @@ import { User } from './users/entities/user.entity';
         USER_NAME: Joi.string().required(),
         USER_PASSWORD: Joi.string().required(),
         DATABASE: Joi.string().required(),
+        TOKEN_SECRET: Joi.string().required(),
       }),
     }),
     GraphQLModule.forRoot({
@@ -37,7 +36,7 @@ import { User } from './users/entities/user.entity';
       password: process.env.USER_PASSWORD,
       database: process.env.DATABASE,
       synchronize: process.env.NODE_ENV !== 'prod',
-      logging: true,
+      logging: process.env.NODE_ENV !== 'prod',
       entities: [User],
     }),
     GraphQLModule.forRoot({
