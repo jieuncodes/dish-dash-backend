@@ -7,12 +7,13 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { User } from './entities/user.entity';
-import { Injectable, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateAccountOutput } from './dtos/create-account.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { CreateAccountInput } from './dtos/create-account.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthUser } from 'src/auth/auth-user.decorator';
 
 @Resolver((of) => User)
 export class UsersResolver {
@@ -55,5 +56,7 @@ export class UsersResolver {
   }
   @Query((returns) => User)
   @UseGuards(AuthGuard)
-  me(@Context() context) {}
+  me(@AuthUser() authUser: User) {
+    return authUser;
+  }
 }
