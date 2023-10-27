@@ -56,6 +56,7 @@ export class UsersService {
         };
       }
       const token = this.jwtService.sign(user.id);
+      console.log('usertoken', token);
       return {
         ok: true,
         token,

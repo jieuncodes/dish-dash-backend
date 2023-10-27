@@ -31,10 +31,6 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
         PRIVATE_KEY: Joi.string().required(),
       }),
     }),
-    GraphQLModule.forRoot({
-      driver: ApolloDriver,
-      autoSchemaFile: true,
-    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -49,6 +45,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
     GraphQLModule.forRoot({
       driver: ApolloDriver,
       autoSchemaFile: true,
+      context: ({ req }) => ({ user: req['user'] }),
     }),
     UsersModule,
     CommonModule,
