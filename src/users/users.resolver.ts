@@ -1,15 +1,17 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { User } from './entities/user.entity';
 import { UseGuards } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateAccountOutput } from './dtos/create-account.dto';
-import { LoginInput, LoginOutput } from './dtos/login.dto';
-import { CreateAccountInput } from './dtos/create-account.dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
-import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import {
+  CreateAccountInput,
+  CreateAccountOutput,
+} from './dtos/create-account.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
+import { LoginInput, LoginOutput } from './dtos/login.dto';
+import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
+import { User } from './entities/user.entity';
+import { UsersService } from './users.service';
 
 @Resolver((of) => User)
 export class UsersResolver {
@@ -98,7 +100,19 @@ export class UsersResolver {
     }
   }
   @Mutation((returns) => VerifyEmailOutput)
-  verifyEmail(@Args('input') { code }: VerifyEmailInput) {
-    this.usersService.verifyEmail(code);
+  async verifyEmail(
+    @Args('input') { code }: VerifyEmailInput,
+  ): Promise<VerifyEmailOutput> {
+    try {
+      this.usersService.verifyEmail(code);
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
+    }
   }
 }
