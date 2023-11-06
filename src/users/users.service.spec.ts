@@ -219,10 +219,39 @@ describe('UserService', () => {
       usersRepository.findOneOrFail.mockRejectedValue(new Error());
 
       const result = await service.findById(1);
-
       expect(result).toEqual({ ok: false, error: 'User Not Found' });
     });
   });
-  it.todo('editProfile');
+
+  describe('editProfile', () => {
+    it('should change password', async () => {
+      const editProfileArgs = {
+        userId: 1,
+        input: { password: 'new.password' },
+      };
+      usersRepository.findOne.mockResolvedValue({ password: 'old' });
+      const result = await service.editProfile(
+        editProfileArgs.userId,
+        editProfileArgs.input,
+      );
+      expect(usersRepository.save).toHaveBeenCalledTimes(1);
+      expect(usersRepository.save).toHaveBeenCalledWith(editProfileArgs.input);
+
+      expect(result).toEqual({ ok: true });
+    });
+
+    it('should fail on exception', async () => {
+      const editProfileArgs = {
+        userId: 1,
+        input: { password: 'new.password' },
+      };
+      usersRepository.findOne.mockRejectedValue(new Error());
+      const result = await service.editProfile(
+        editProfileArgs.userId,
+        editProfileArgs.input,
+      );
+      expect(result).toEqual({ ok: false, error: 'Could not update profile.' });
+    });
+  });
   it.todo('verifyEmail');
 });
