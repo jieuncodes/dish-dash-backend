@@ -10,9 +10,9 @@ export class MailService {
     @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
   ) {}
 
-  async sendEmail(subject: string, emailVars: EmailVar[]) {
-    const mailgun = new Mailgun(formData);
-    const mgClient = mailgun.client({
+  async sendEmail(subject: string, emailVars: EmailVar[]): Promise<boolean> {
+    const mailgunFromData = new Mailgun(formData);
+    const mgClient = mailgunFromData.client({
       username: 'youredith',
       key: this.options.apiKey,
     });
@@ -23,17 +23,16 @@ export class MailService {
       subject,
       html: '<h1>Testing some Mailgun awesomeness!</h1>',
     };
-    console.log('mailgun', mailgun);
 
-    emailVars.forEach((eVar) => {
-      messageData[`v:${eVar.key}`] = eVar.value;
-    });
     try {
       await mgClient.messages.create(this.options.domain, messageData);
+      return true;
     } catch (error) {
       console.log('error', error);
+      return false;
     }
   }
+
   sendVerificationEmail(email: string, code: string) {
     this.sendEmail('Verify Your Email', [
       { key: 'code', value: code },
